@@ -94,10 +94,7 @@ NETWORK_STAT_MAP.forEach(function(url, host, map) {
     })
     .always(function() {
         poolsRefreshed++;
-
-        if (poolsRefreshed === NETWORK_STAT_MAP.size){
-            setTimeout(function(){ displayChart(); }, 1000);
-        }
+        displayChart();
     });
 });
 
@@ -128,19 +125,16 @@ NETWORK_STAT_MAP2.forEach(function(url, host, map) {
 
         $.getJSON(url + '/network/stats', function(data, textStatus, jqXHR) {
             updateText('height-'+poolName, localizeNumber(data.height));
+        })
+        .always(function() {
+            poolsRefreshed++;
+            displayChart();
         });
 
         $.getJSON(url + '/config', function(data, textStatus, jqXHR) {
             updateText('totalFee-'+poolName, "PPLNS: "+data.pplns_fee+"%,\nPPS: "+data.pps_fee+"%,\nSolo: "+data.solo_fee+"%");
             updateText('minPayout-'+poolName, "Wallet: "+getReadableCoins(data.min_wallet_payout,2)+",\nExchange: "+getReadableCoins(data.min_exchange_payout,2));
         });
-    })
-    .always(function() {
-        poolsRefreshed++;
-
-        if (poolsRefreshed === NETWORK_STAT_MAP2.size){
-            setTimeout(function(){ displayChart(); }, 1000);
-        }
     });
 });
 
@@ -261,10 +255,7 @@ setInterval(function(){
         })
         .always(function() {
             poolsRefreshed++;
-
-            if (poolsRefreshed === NETWORK_STAT_MAP.size){
-                setTimeout(function(){ displayChart(); }, 1000);
-            }
+            displayChart();
         });
     });
 
@@ -293,19 +284,17 @@ setInterval(function(){
             updateText('total_miners', localizeNumber(totalMiners));
 
             poolStats.push([poolName, data.pool_statistics.hashRate, colorHash.hex(poolName)]);
+        })
+        .always(function() {
+            poolsRefreshed++;
+            displayChart();
         });
+        
         $.getJSON(url + '/network/stats', (data, textStatus, jqXHR) => {
             updateText('height-'+poolName, localizeNumber(data.height));
         });
-    })
-    .always(function() {
-        poolsRefreshed++;
-
-        if (poolsRefreshed === NETWORK_STAT_MAP2.size){
-            setTimeout(function(){ displayChart(); }, 1000);
-        }
     });
-
+    
 }, 120000);
 
 
